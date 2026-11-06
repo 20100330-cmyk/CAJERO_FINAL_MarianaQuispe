@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cajero Automático - Banco Andino</title>
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+    
+    <div class="atm-cabinet">
+        <div class="atm-header">
+            <div class="bank-logo">🏦 BANCO ANDINO</div>
+            <div class="atm-info">ATM #0042 • Todo el país</div>
+        </div>
+
+        
+        <div class="screen-frame">
+            <div class="screen-display">
+                
+                
+                <div class="logeo">
+                    <h2>Bienvenido a Banco Andino</h2>
+                    <p class="subtitle">Seleccione cómo desea ingresar</p>
+                    
+                    <div id="login-options" class="button-group">
+                        <button class="btn-primary" onclick="showDniForm()">Ingresar con DNI</button>
+                        <button class="btn-secondary" onclick="showAccountList()">Ingreso sin DNI (Elegir Cuenta)</button>
+                    </div>
+
+                    
+                    <div id="dni-form" class="sub-form hidden">
+                        <p>Ingrese su número de DNI:</p>
+                        <input type="text" inputmode="numeric" id="input-dni" placeholder="Ingresa 8 números" />
+                        <div class="btn-actions">
+                            <button class="btn-action" onclick="validarDNI()">Continuar</button>
+                            <button class="btn-cancel" onclick="resetLogeo()">Volver</button>
+                        </div>
+                    </div>
+
+                    
+                    <div id="accounts-form" class="sub-form hidden">
+                        <p>Seleccione su usuario:</p>
+                        <div id="accounts-buttons" class="button-group"></div>
+                        <button class="btn-cancel" onclick="resetLogeo()" style="margin-top:10px;">Volver</button>
+                    </div>
+
+                    
+                    <div id="pin-form" class="sub-form hidden">
+                        <p id="welcome-user">Hola, bienvenido</p>
+                        <p>Ingrese su clave de 4 dígitos:</p>
+                        <input type="password" id="input-pin" maxlength="4" placeholder="****" />
+                        <div class="btn-actions">
+                            <button class="btn-action" onclick="validarPIN()">Ingresar</button>
+                            <button class="btn-cancel" onclick="resetLogeo()">Cancelar</button>
+                        </div>
+                    </div>
+
+                    <div id="logeo-error" class="alert-msg hidden"></div>
+                </div>
+
+                
+                <div class="menu hidden">
+                    <div class="user-header">
+                        <span id="menu-user-name">Usuario</span>
+                        <button class="btn-exit-top" onclick="irAGracias()">Salir</button>
+                    </div>
+                    <h2>Seleccione la operación</h2>
+                    <div class="menu-grid">
+                        <button class="btn-menu" onclick="irASaldo()">Consultar Saldo</button>
+                        <button class="btn-menu" onclick="irADepositar()">Depositar Monto</button>
+                        <button class="btn-menu" onclick="irARetirar()">Retirar Monto</button>
+                        <button class="btn-menu" onclick="irAGracias()">Cerrar Sesión</button>
+                    </div>
+                </div>
+
+                
+                <div class="depositar hidden">
+                    <h2>Depositar Monto</h2>
+                    <p>Seleccione o añada billetes:</p>
+                    
+                    
+                    <div class="bills-selector">
+                        <button class="btn-bill" onclick="agregarMontoDeposito(20)">+ S/ 20</button>
+                        <button class="btn-bill" onclick="agregarMontoDeposito(50)">+ S/ 50</button>
+                        <button class="btn-bill" onclick="agregarMontoDeposito(100)">+ S/ 100</button>
+                        <button class="btn-bill" onclick="agregarMontoDeposito(200)">+ S/ 200</button>
+                    </div>
+
+                    <input type="number" id="input-deposito" placeholder="S/ 0" readonly />
+                    <button class="btn-clear-monto" onclick="limpiarMontoDeposito()">Limpiar monto</button>
+                    
+                    <div id="dispenser-slot" class="slot-cash">
+                        <div id="cash-animation" class="cash-bills hidden">💵 💵 💵</div>
+                    </div>
+
+                    <div class="btn-actions">
+                        <button class="btn-action" onclick="procesarDeposito()">Confirmar Depósito</button>
+                        <button class="btn-cancel" onclick="irAMenu()">Cancelar</button>
+                    </div>
+                    <div id="deposito-msg" class="alert-msg hidden"></div>
+                </div>
+
+                
+                <div class="saldo hidden">
+                    <h2>Consulta de Saldo</h2>
+                    <p>Su saldo disponible actual es:</p>
+                    <div class="saldo-box" id="saldo-monto">S/ 0.00</div>
+                    <button class="btn-action" onclick="irAMenu()">Volver al Menú</button>
+                </div>
+
+                
+                <div class="retirar hidden">
+                    <h2>Retirar Monto</h2>
+                    <p>Seleccione o añada billetes:</p>
+                    
+                    
+                    <div class="bills-selector">
+                        <button class="btn-bill" onclick="agregarMontoRetiro(20)">+ S/ 20</button>
+                        <button class="btn-bill" onclick="agregarMontoRetiro(50)">+ S/ 50</button>
+                        <button class="btn-bill" onclick="agregarMontoRetiro(100)">+ S/ 100</button>
+                        <button class="btn-bill" onclick="agregarMontoRetiro(200)">+ S/ 200</button>
+                    </div>
+
+                    <input type="number" id="input-retiro" placeholder="S/ 0" readonly />
+                    <button class="btn-clear-monto" onclick="limpiarMontoRetiro()">Limpiar monto</button>
+                    
+                    <div id="retiro-dispenser-slot" class="slot-cash">
+                        <div id="retiro-cash-animation" class="cash-bills hidden">💵 💵 💵</div>
+                    </div>
+
+                    <div class="btn-actions">
+                        <button class="btn-action" onclick="procesarRetiro()">Confirmar Retiro</button>
+                        <button class="btn-cancel" onclick="irAMenu()">Cancelar</button>
+                    </div>
+                    <div id="retiro-msg" class="alert-msg hidden"></div>
+                </div>
+
+                
+                <div class="gracias hidden">
+                    <div class="gracias-card">
+                        <h1>¡Gracias por su visita!</h1>
+                        <p class="slogan">Nos encontramos en todo el país, gracias.</p>
+                        <button class="btn-primary" style="margin-top:25px;" onclick="reiniciarCajero()">Nueva Operación</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
